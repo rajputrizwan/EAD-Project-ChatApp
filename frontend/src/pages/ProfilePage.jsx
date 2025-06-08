@@ -115,7 +115,7 @@ function ProfilePage() {
               </div>
               <div className="flex items-center justify-between py-2">
                 <span>Account Status</span>
-                <span className="text-green-500">Active</span>
+                <span className="text-green-500 font-bold">Active</span>
               </div>
             </div>
           </div>
