@@ -1,25 +1,25 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useChatStore } from "../store/useChatStore";
 import SidebarSkeleton from "./skeletons/SidebarSkeleton";
 import { Users } from "lucide-react";
 import { useAuthStore } from "../store/useAuthStore";
 
 function Sidebar() {
-  const { getUsers, users, selectedUser, setSelectUser, isUserLoading } =
+  const { getUsers, users, selectedUser, setSelectedUser, isUserLoading } =
     useChatStore();
 
-  const [showOnlineOnly, setShowOnlineOnly] = useState(false);
+  // const [showOnlineOnly, setShowOnlineOnly] = useState(false);
 
-  // ✅ Correctly extract onlineUsers array
-  const onlineUsers = useAuthStore((state) => state.onlineUsers);
+  // const onlineUsers = useAuthStore((state) => state.onlineUsers);
+  const { onlineUsers } = useAuthStore();
 
   useEffect(() => {
     getUsers();
   }, [getUsers]);
 
-  const filteredUsers = showOnlineOnly
-    ? users.filter((user) => onlineUsers.includes(user._id))
-    : users;
+  // const filteredUsers = showOnlineOnly
+  //   ? users.filter((user) => onlineUsers.includes(user._id))
+  //   : users;
 
   if (isUserLoading) {
     return <SidebarSkeleton />;
@@ -33,6 +33,7 @@ function Sidebar() {
           <span className="font-medium hidden lg:block">Contacts</span>
         </div>
 
+        {/* 
         <div className="mt-3 hidden lg:flex items-center gap-2">
           <label className="cursor-pointer flex items-center gap-2">
             <input
@@ -47,13 +48,16 @@ function Sidebar() {
             ({onlineUsers.length} online)
           </span>
         </div>
+        */}
       </div>
 
       <div className="overflow-y-auto w-full py-3">
-        {filteredUsers.map((user) => (
+        {/* {filteredUsers.map((user) => ( */}
+
+        {users.map((user) => (
           <button
             key={user._id}
-            onClick={() => setSelectUser(user)}
+            onClick={() => setSelectedUser(user)}
             className={`w-full p-3 flex items-center gap-3
               hover:bg-base-300 transition-colors
               ${
@@ -82,7 +86,8 @@ function Sidebar() {
           </button>
         ))}
 
-        {filteredUsers.length === 0 && (
+        {/* {filteredUsers.length === 0 && ( */}
+        {users.length === 0 && (
           <div className="text-center text-zinc-500 py-4">No users found</div>
         )}
       </div>
