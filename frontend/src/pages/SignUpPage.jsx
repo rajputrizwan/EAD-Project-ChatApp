@@ -19,6 +19,7 @@ function SignUpPage() {
     fullName: "",
     email: "",
     password: "",
+    confirmpassword: "",
   });
   const { signup, isSigningUp } = useAuthStore();
 
@@ -29,8 +30,11 @@ function SignUpPage() {
       return toast.error("Invalid email format");
     if (formData.password.length < 6)
       return toast.error("Password must be at least 6 characters");
+    if (formData.password !== formData.confirmPassword)
+      return toast.error("Passwords do not match");
     return true;
   };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     const success = validateForm();
@@ -118,6 +122,45 @@ function SignUpPage() {
                     value={formData.password}
                     onChange={(e) =>
                       setFormData({ ...formData, password: e.target.value })
+                    }
+                  />
+                  <button
+                    type="button"
+                    className="absolute inset-y-0 right-0 pr-3 flex items-center z-30"
+                    onClick={() => setShowPassword(!showPassword)}
+                    tabIndex={-1}
+                  >
+                    {showPassword ? (
+                      <EyeOff className="w-5 h-5 text-base-content/40" />
+                    ) : (
+                      <Eye className="w-5 h-5 text-base-content/40" />
+                    )}
+                  </button>
+                </div>
+              </div>
+
+              {/* CONFIRM PASSWORD FIELD */}
+              <div className="form-control">
+                <label className="label">
+                  <span className="label-text font-medium">
+                    Confirm Password
+                  </span>
+                </label>
+                <div className="relative">
+                  <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 z-10">
+                    <Lock className="w-5 h-5 text-base-content/40" />
+                  </div>
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    required
+                    className="input input-bordered w-full pl-10 relative z-20 bg-transparent"
+                    placeholder="*********"
+                    value={formData.confirmPassword}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        confirmPassword: e.target.value,
+                      })
                     }
                   />
                   <button
