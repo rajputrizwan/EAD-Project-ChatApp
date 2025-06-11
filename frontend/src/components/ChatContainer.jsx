@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import ChatHeader from "./ChatHeader.jsx";
 import MessageInput from "./MessageInput.jsx";
 import { useChatStore } from "../store/useChatStore.js";
@@ -7,16 +7,40 @@ import MessageSkeleton from "./skeletons/MessageSkeleton.jsx";
 import { formatMessageTime } from "../lib/utils.js";
 
 function ChatContainer() {
-  const { messages, getMessages, isMessagesLoading, selectedUser } =
-    useChatStore();
+  const {
+    messages,
+    getMessages,
+    isMessagesLoading,
+    selectedUser,
+    subscribeToMessages,
+    unsubscribeFromMessages,
+  } = useChatStore();
 
   const { authUser } = useAuthStore();
+  const messageEndRef = useRef(null);
+
+  useEffect(() => {
+    if (messageEndRef.current && messages)
+      messageEndRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "end",
+      });
+  }, [messages]);
 
   useEffect(() => {
     if (selectedUser?._id) {
       getMessages(selectedUser._id);
+      subscribeToMessages();
+      return () => {
+        unsubscribeFromMessages();
+      };
     }
-  }, [selectedUser?._id, getMessages]);
+  }, [
+    selectedUser?._id,
+    getMessages,
+    subscribeToMessages,
+    unsubscribeFromMessages,
+  ]);
 
   if (isMessagesLoading) {
     return (
@@ -42,6 +66,7 @@ function ChatContainer() {
               <div
                 key={message._id}
                 className={`chat ${isSentByMe ? "chat-end" : "chat-start"}`}
+                ref={messageEndRef}
               >
                 <div className="chat-image avatar">
                   <div className="size-10 rounded-full border">
