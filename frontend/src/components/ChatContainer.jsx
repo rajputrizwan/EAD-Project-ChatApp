@@ -20,11 +20,12 @@ function ChatContainer() {
   const messageEndRef = useRef(null);
 
   useEffect(() => {
-    if (messageEndRef.current && messages)
+    if (messageEndRef.current && messages) {
       messageEndRef.current?.scrollIntoView({
         behavior: "smooth",
         block: "end",
       });
+    }
   }, [messages]);
 
   useEffect(() => {
