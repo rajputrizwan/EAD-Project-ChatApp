@@ -13,17 +13,22 @@ dotenv.config();
 const __dirname = path.resolve();
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true, limit: "10mb" }));
-
 app.use(cookieParser());
+
 app.use(
   cors({
-    origin: "http://localhost:5173", // Corrected for Vite frontend
+    origin: "http://localhost:5173", // Match frontend dev URL
     credentials: true,
   })
 );
 
 app.use("/api/auth", authRoutes);
 app.use("/api/messages", messageRoutes);
+
+// ✅ Ensure API 404s don’t fall into frontend wildcard
+app.use("/api", (req, res) => {
+  res.status(404).json({ message: "API route not found" });
+});
 
 if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.join(__dirname, "../frontend/dist")));
