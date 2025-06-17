@@ -17,7 +17,7 @@ app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 app.use(cookieParser());
 app.use(
   cors({
-    origin: "http://localhost:5000",
+    origin: "http://localhost:5173", // Corrected for Vite frontend
     credentials: true,
   })
 );
